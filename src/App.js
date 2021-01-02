@@ -1,23 +1,25 @@
-import logo from './logo.svg';
+import { useState, useEffect } from 'react';
 import './App.css';
+import Video from './components/Video';
+import RecordBtn from './components/RecordBtn';
+import VideoSelectBtn from './components/VideoSelectBtn';
 
 function App() {
+  const [mediaRecorder, setMediaRecorder] = useState();
+  const [recordedChunks, setRecordedChunks] = useState([]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <h1>⚡ Electron Screen Recorder</h1>
+
+      <Video />
+
+      <VideoSelectBtn
+        mediaRecorder={mediaRecorder}
+        setMediaRecorder={setMediaRecorder}
+      />
+      <hr />
+      <RecordBtn mediaRecorder={mediaRecorder} />
     </div>
   );
 }
