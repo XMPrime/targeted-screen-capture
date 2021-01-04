@@ -17,8 +17,10 @@ function App() {
   const [currentStream, setCurrentStream] = useState();
   const [streamDimensions, setStreamDimensions] = useState();
   const [mousePos, setMousePos] = useState([0, 0]);
-  const [lensHeight, setLensHeight] = useState(150);
-  const [lensWidth, setLensWidth] = useState(150);
+  const [lensHeight, setLensHeight] = useState(100);
+  const [lensWidth, setLensWidth] = useState(100);
+  const [zoomMultiplier, setZoomMultiplier] = useState(1.5);
+  const [intervalId, setIntervalId] = useState();
 
   const moveLens = (e) => {
     e.preventDefault();
@@ -107,24 +109,30 @@ function App() {
     if (id === 'lens-height') {
       setLensHeight(value);
       lens.style.height = value + 'px';
-      canvas.style.height = value + 'px';
+      canvas.style.height = value * zoomMultiplier + 'px';
     }
     if (id === 'lens-width') {
       setLensWidth(value);
       lens.style.width = value + 'px';
-      canvas.style.width = value + 'px';
+      canvas.style.width = value * zoomMultiplier + 'px';
     }
+  };
+
+  const changeZoom = (e) => {
+    const multiplier = e.target.value;
+    const canvas = document.getElementById('canvas');
+    setZoomMultiplier(multiplier);
+    canvas.style.height = lensHeight * multiplier + 'px';
+    canvas.style.width = lensWidth * multiplier + 'px';
   };
 
   useEffect(() => {
     const lens = document.getElementById('zoom-lens');
     const canvas = document.getElementById('canvas');
-    const defaultSize = lensWidth + 'px';
-    lens.style.height = defaultSize;
-    lens.style.width = defaultSize;
-    canvas.style.height = defaultSize;
-    canvas.style.width = defaultSize;
-    document.addEventListener('click', (e) => console.log(e.target));
+    lens.style.height = lensWidth + 'px';
+    lens.style.width = lensWidth + 'px';
+    canvas.style.height = lensWidth * zoomMultiplier + 'px';
+    canvas.style.width = lensWidth * zoomMultiplier + 'px';
   }, []);
 
   return (
@@ -150,6 +158,15 @@ function App() {
             onChange={changeLensDimensions}
           ></input>
         </div>
+        <div>
+          <label>Zoom Multiplier: </label>
+          <input
+            id='lens-width'
+            type='number'
+            value={zoomMultiplier}
+            onChange={changeZoom}
+          ></input>
+        </div>
         {/* <label>Crop Width: </label>
         <input type='text'></input> */}
       </div>
@@ -166,16 +183,28 @@ function App() {
           mousePos={mousePos}
           lensHeight={lensHeight}
           lensWidth={lensWidth}
+          zoomMultiplier={zoomMultiplier}
           currentStream={currentStream}
           setStreamDimensions={setStreamDimensions}
           streamDimensions={streamDimensions}
+          setIntervalId={setIntervalId}
         />
 
-        <ZoomLens />
+        <ZoomLens
+          mousePos={mousePos}
+          lensHeight={lensHeight}
+          lensWidth={lensWidth}
+          zoomMultiplier={zoomMultiplier}
+          currentStream={currentStream}
+          setStreamDimensions={setStreamDimensions}
+          streamDimensions={streamDimensions}
+          intervalId={intervalId}
+          setIntervalId={setIntervalId}
+        />
         {/* <div id='zoomed-image'></div> */}
       </div>
       <hr />
-      <label>Preview</label>
+      <label>{`Preview (${zoomMultiplier}x)`}</label>
       <Canvas />
 
       <hr />

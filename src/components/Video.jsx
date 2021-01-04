@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
+const { remote } = window.require('electron');
 
 const Video = ({
-  mousePos,
+  // mousePos,
   lensHeight,
   lensWidth,
+  zoomMultiplier,
   currentStream,
   // streamDimensions,
   setStreamDimensions,
+  setIntervalId,
 }) => {
   const [mouseDown, setMouseDown] = useState(false);
   const drawCanvas = (e, sx, sy, sWidth, sHeight) => {
@@ -18,57 +21,70 @@ const Video = ({
       const ctx = canvas.getContext('2d');
       const video = document.getElementById('video');
       const streamDimensions = video.getBoundingClientRect();
-      // console.log(streamDimensions.width, streamDimensions.height);
+      // const { x, y } = remote.screen.getCursorScreenPoint();
+      // console.log(x, y);
+      // const { x, y } = getMousePosition();
+
       const lens = document.getElementById('zoom-lens');
-      const cx = video.offsetWidth / lens.offsetWidth;
-      const cy = video.offsetHeight / lens.offsetHeight;
-      // console.log(video.offsetWidth, video.offsetHeight);
-      // console.log(lens.offsetWidth, lens.offsetHeight);
-      // console.log(canvas.offsetWidth, canvas.offsetHeight);
+      const cx = canvas.offsetWidth / lens.offsetWidth;
+      const cy = canvas.offsetHeight / lens.offsetHeight;
 
-      // const contentX = remote.getCurrentWindow().getContentSize()[0];
-      const { width, height } = currentStream
-        ? currentStream.getVideoTracks()[0].getSettings()
-        : { width: 0, height: 0 };
-      console.log(width, height);
-      // const ratio = width / height;
-
-      // const X / (width/height)  = contentY
-      // const contentY = contentX / ratio;
-      // const [screenX, screenY] = remote.screen.getPrimaryDisplay().size;
-      // const screenRatio = screenX / screenY;
-      //NEED TO GET SIZE OF ACTUAL STREAM
+      // Create canvas at 1.5x larger than lens
+      ctx.canvas.width = lens.offsetWidth * zoomMultiplier;
+      ctx.canvas.height = lens.offsetHeight * zoomMultiplier;
+      // ctx.canvas.width = video.offsetWidth;
+      // ctx.canvas.height = video.offsetHeight;
       ctx.drawImage(
         e.target,
+        sx,
+        sy,
+        sWidth,
+        sHeight,
         0,
         0,
-        1280,
-        442
-        // 0,
-        // 0,
-        // lensWidth * cx,
-        // lensHeight * cy
+        sWidth,
+        sHeight
+        // video.offsetWidth * cx,
+        // video.offsetHeight * cy
       );
-      setTimeout(drawLoop, 1000 / 2); // drawing at 30fps
+
+      // setTimeout(drawLoop, 1000 / 2); // drawing at 30fps
     };
 
-    drawLoop();
+    // drawLoop();
+    const drawIntervalPlay = setInterval(drawLoop, 1000 / 10);
+    setIntervalId(drawIntervalPlay);
   };
 
-  const saveImages = (e, sx, sy, sWidth, sHeight) => {
-    // const canvas = document.getElementById('canvas');
-    // const ctx = canvas.getContext('2d');
-    if (mouseDown) {
-      console.log('saving images');
-      // remember to cap the rate of images saved
-    }
-    // ctx.drawImage(e.target, 0, 0);
-    // ctx.drawImage(e.target, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight);
-  };
+  const getMousePosition = (e) => {
+    let lens = document.getElementById('zoom-lens');
+    const video = document.getElementById('video');
+    const { left, top, width, height } = video.getBoundingClientRect();
+    let x = 0;
+    let y = 0;
+    const { pageX, pageY } = e;
 
-  const toggleMouseDown = () => {
-    console.log(mouseDown);
-    setMouseDown(!mouseDown);
+    x = pageX - left;
+    y = pageY - top;
+    x = x - window.pageXOffset;
+    y = y - window.pageYOffset;
+
+    // x = x - lensWidth / 2;
+    // y = y - lensHeight / 2;
+
+    // if (x > width - lensWidth) {
+    //   x = width - lensWidth;
+    // }
+    // if (x < 0) {
+    //   x = 0;
+    // }
+    // if (y > height - lensHeight) {
+    //   y = height - lensHeight;
+    // }
+    // if (y < 0) {
+    //   y = 0;
+    // }
+    return { x, y };
   };
 
   useEffect(() => {});
@@ -78,11 +94,14 @@ const Video = ({
       id='video'
       onPlay={(e) => {
         console.log('playing');
-        drawCanvas(e, 200, 200, lensWidth, lensHeight);
+        drawCanvas(
+          e,
+          10,
+          10,
+          lensWidth * zoomMultiplier,
+          lensHeight * zoomMultiplier
+        );
       }}
-      onMouseDown={toggleMouseDown}
-      onMouseUp={toggleMouseDown}
-      onMouseMove={saveImages}
       // onMouseMove={(e) => {
       //   saveImages(e, mousePos[0], mousePos[1], lensWidth, lensHeight);
       // }}
