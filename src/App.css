@@ -1,5 +1,49 @@
+.zoom-container {
+  position: relative;
+  border: 1px solid black;
+  max-width: 90%;
+  line-height: 0;
+}
+
+#zoom-lens {
+  position: absolute;
+  border: 1px solid black;
+}
+#zoom-lens:hover {
+  cursor: crosshair;
+}
+
+#zoomed-image {
+  width: 300px;
+  height: 300px;
+  border: 1px solid black;
+  /* background-image: */
+}
+
+#zoomed-image:hover {
+  cursor: crosshair;
+}
+
+#canvas {
+  border: 1px solid black;
+}
+
+#videoSelectBtn {
+  margin: 2rem 0;
+}
+
+.text-inputs {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .App-logo {

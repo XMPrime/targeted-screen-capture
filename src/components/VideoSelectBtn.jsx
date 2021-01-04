@@ -7,8 +7,13 @@ const { desktopCapturer, remote } = window.require('electron');
 const { writeFile } = remote.require('fs');
 const recordedChunks = [];
 
-const VideoSelectBtn = ({ mediaRecorder, setMediaRecorder }) => {
-  const [sourceName, setSourceName] = useState('Choose a Video Source');
+const VideoSelectBtn = ({
+  mediaRecorder,
+  setMediaRecorder,
+  setCurrentStream,
+  setStreamDimensions,
+}) => {
+  const [sourceName, setSourceName] = useState();
   // const [recordedChunks, setRecordedChunks] = useState([]);
 
   const getVideoSources = async () => {
@@ -42,15 +47,20 @@ const VideoSelectBtn = ({ mediaRecorder, setMediaRecorder }) => {
         mandatory: {
           chromeMediaSource: 'desktop',
           chromeMediaSourceId: source.id,
+          maxWidth: 1280,
+          maxHeight: 720,
         },
       },
     };
 
     // Create a Stream
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    setCurrentStream(stream);
     // Preview the source in a video element
     video.srcObject = stream;
+    video.source_id = source.id;
     video.play();
+
     // Create the Media Recorder
     const options = { mimeType: 'video/webm; codecs=vp9' };
     let mediaRecorder = new MediaRecorder(stream, options);
@@ -93,10 +103,10 @@ const VideoSelectBtn = ({ mediaRecorder, setMediaRecorder }) => {
   return (
     <button
       id='videoSelectBtn'
-      className='button is-text'
+      className='button is-primary'
       onClick={getVideoSources}
     >
-      {sourceName}
+      {sourceName ? `Casting "${sourceName}"` : 'Choose a Video Source'}
     </button>
   );
 };

@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, screen } = require('electron');
 // import { app, BrowserWindow } from 'electron';
 // const electron = require('electron');
 // const app = electron.app;
