@@ -1,13 +1,13 @@
 .zoom-container {
   position: relative;
   border: 1px solid black;
-  max-width: 90%;
+
   line-height: 0;
 }
 
 #zoom-lens {
   position: absolute;
-  border: 1px solid black;
+  border: 2px dotted red;
 }
 #zoom-lens:hover {
   cursor: crosshair;
@@ -22,6 +22,11 @@
 
 #zoomed-image:hover {
   cursor: crosshair;
+}
+
+#video {
+  width: 960px;
+  height: 540px;
 }
 
 #canvas {

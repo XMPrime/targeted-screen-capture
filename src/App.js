@@ -40,6 +40,7 @@ function App() {
       let x = 0;
       let y = 0;
       const { pageX, pageY } = e;
+      // console.log(e);
 
       x = pageX - left;
       y = pageY - top;

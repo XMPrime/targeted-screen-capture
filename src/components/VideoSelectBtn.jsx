@@ -47,8 +47,12 @@ const VideoSelectBtn = ({
         mandatory: {
           chromeMediaSource: 'desktop',
           chromeMediaSourceId: source.id,
-          maxWidth: 1280,
-          maxHeight: 720,
+          // maxWidth: 1280,
+          // maxHeight: 720,
+          maxWidth: 960,
+          maxHeight: 540,
+          minWidth: 960,
+          minHeight: 540,
         },
       },
     };
