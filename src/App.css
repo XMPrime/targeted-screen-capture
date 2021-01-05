@@ -1,3 +1,7 @@
+.buttons {
+  display: flex;
+  margin-top: 2rem;
+}
 .zoom-container {
   position: relative;
   border: 1px solid black;
@@ -31,10 +35,7 @@
 
 #canvas {
   border: 1px solid black;
-}
-
-#videoSelectBtn {
-  margin: 2rem 0;
+  margin-bottom: 2rem;
 }
 
 .text-inputs {

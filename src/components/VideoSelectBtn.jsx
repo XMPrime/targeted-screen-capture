@@ -47,8 +47,6 @@ const VideoSelectBtn = ({
         mandatory: {
           chromeMediaSource: 'desktop',
           chromeMediaSourceId: source.id,
-          // maxWidth: 1280,
-          // maxHeight: 720,
           maxWidth: 960,
           maxHeight: 540,
           minWidth: 960,
@@ -59,7 +57,7 @@ const VideoSelectBtn = ({
 
     // Create a Stream
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    setCurrentStream(stream);
+
     // Preview the source in a video element
     video.srcObject = stream;
     video.source_id = source.id;

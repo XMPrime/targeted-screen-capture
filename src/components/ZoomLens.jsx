@@ -1,15 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const ZoomLens = ({
-  mousePos,
   lensHeight,
   lensWidth,
   zoomMultiplier,
-  currentStream,
-  // streamDimensions,
-  setStreamDimensions,
   intervalId,
   setIntervalId,
+  images,
+  setImages,
 }) => {
   const [mouseDown, setMouseDown] = useState(false);
 
@@ -20,7 +18,7 @@ const ZoomLens = ({
       const video = document.getElementById('video');
       const lens = document.getElementById('zoom-lens');
 
-      // Create canvas at 1.5x larger than lens
+      // Create canvas larger than lens
       ctx.canvas.width = lens.offsetWidth * zoomMultiplier;
       ctx.canvas.height = lens.offsetHeight * zoomMultiplier;
 
@@ -35,8 +33,12 @@ const ZoomLens = ({
         video.offsetWidth * zoomMultiplier,
         video.offsetHeight * zoomMultiplier
       );
+
       console.log('saving images');
       // remember to cap the rate of images saved
+      const newImage = canvas.toDataURL('image/png');
+      // .replace("image/png", "image/octet-stream");
+      setImages([...images, newImage]);
     }
   };
 
@@ -78,7 +80,7 @@ const ZoomLens = ({
       onMouseUp={toggleMouseDown}
       onMouseMove={(e) => {
         const { x, y } = getMousePosition(e);
-        console.log(x, y);
+        // console.log(x, y);
         saveImages(x, y);
       }}
       onMouseEnter={() => clearInterval(intervalId)}
